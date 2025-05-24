@@ -109,7 +109,7 @@ function App() {
             <div className="font-bold text-lg">{balance} ETH</div>
           </div>
         )}
-        {error && <div className="text-red-600 mb-4">{error}</div>}
+        {error && <div className="text-red-600 mb-4 text-center">{error}</div>}
         {address && transactions.length > 0 && (
           <div>
             <div className="text-gray-700 text-sm mb-2">
