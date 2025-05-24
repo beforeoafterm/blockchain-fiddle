@@ -3,6 +3,9 @@ import type { Transaction } from '../types/ethereum'
 import { useState } from 'react'
 import { ethers } from 'ethers'
 
+import TransactionList from './components/TransactionList'
+import ConnectWalletButton from './components/ConnectWalletButton'
+import WalletDetails from './components/WalletDetails'
 import './App.css'
 
 const ETHERSCAN_API_KEY = import.meta.env.VITE_ETHERSCAN_API_KEY ?? ''
@@ -17,10 +20,12 @@ function App() {
 
   const connectWallet = async () => {
     setError('')
+
     if (!window.ethereum) {
       setError('MetaMask is not installed.')
       return
     }
+
     try {
       setLoading(true)
       const provider = new ethers.BrowserProvider(
@@ -48,9 +53,7 @@ function App() {
   }
 
   const fetchTransactions = async (userAddress: string) => {
-    setError('')
     try {
-      setLoading(true)
       const url = `${ETHERSCAN_API}?module=account&action=txlist&address=${userAddress}&sort=desc&apikey=${ETHERSCAN_API_KEY}`
       const res = await fetch(url)
       const data = await res.json()
@@ -64,81 +67,29 @@ function App() {
       // Log error for debugging, show user-friendly message
       console.error('Failed to fetch transactions:', err)
       setError('Failed to fetch transactions.')
-    } finally {
-      setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <div className="bg-white shadow rounded-lg p-8 w-full max-w-md">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+      <section className="bg-white shadow rounded-lg p-8 w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4 text-center">
           Ethereum Wallet Dashboard
         </h1>
         {!address ? (
-          <button
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-4"
-            onClick={connectWallet}
-            disabled={loading}
-          >
-            {loading ? 'Connecting...' : 'Connect Wallet'}
-          </button>
+          <ConnectWalletButton onClick={connectWallet} loading={loading} />
         ) : (
-          <div className="mb-4">
-            <div className="text-gray-700 text-sm mb-2">Connected Address:</div>
-            <div className="font-mono break-all text-blue-700">{address}</div>
-          </div>
+          <WalletDetails address={address} balance={balance} />
         )}
-        {address && (
-          <div className="mb-4">
-            <div className="text-gray-700 text-sm">ETH Balance:</div>
-            <div className="font-bold text-lg">{balance} ETH</div>
-          </div>
-        )}
-        {error && <div className="text-red-600 mb-4 text-center">{error}</div>}
+        {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
         {address && transactions.length > 0 && (
-          <div>
-            <div className="text-gray-700 text-sm mb-2">
-              Last 10 Transactions:
-            </div>
-            <ul className="space-y-2 max-h-64 overflow-y-auto">
-              {transactions.map(tx => (
-                <li key={tx.hash} className="border rounded p-2 text-xs">
-                  <div>
-                    <span className="font-semibold">Hash:</span>{' '}
-                    <a
-                      href={`https://etherscan.io/tx/${tx.hash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline"
-                    >
-                      {tx.hash.slice(0, 18)}...
-                    </a>
-                  </div>
-                  <div>
-                    <span className="font-semibold">From:</span>{' '}
-                    {tx.from.slice(0, 8)}...{' '}
-                    <span className="font-semibold">To:</span>{' '}
-                    {tx.to.slice(0, 8)}...
-                  </div>
-                  <div>
-                    <span className="font-semibold">Value:</span>{' '}
-                    {ethers.formatEther(tx.value)} ETH
-                  </div>
-                  <div>
-                    <span className="font-semibold">Time:</span>{' '}
-                    {new Date(Number(tx.timeStamp) * 1000).toLocaleString()}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <TransactionList transactions={transactions} />
         )}
-      </div>
-      <div className="mt-8 text-gray-400 text-xs text-center">
+      </section>
+      <footer className="mt-8 text-gray-400 text-xs text-center">
         Powered by ethers.js & Etherscan API
-      </div>
-    </div>
+      </footer>
+    </main>
   )
 }
 
