@@ -1,26 +1,9 @@
+import type { Transaction } from '../types/ethereum'
+
 import { useState } from 'react'
 import { ethers } from 'ethers'
+
 import './App.css'
-
-interface Transaction {
-  hash: string
-  from: string
-  to: string
-  value: string
-  timeStamp: string
-}
-
-// Type for window.ethereum
-interface EthereumProvider {
-  isMetaMask?: boolean
-  request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
-}
-
-declare global {
-  interface Window {
-    ethereum?: EthereumProvider
-  }
-}
 
 const ETHERSCAN_API_KEY = import.meta.env.VITE_ETHERSCAN_API_KEY ?? ''
 const ETHERSCAN_API = 'https://api.etherscan.io/api'
@@ -47,10 +30,13 @@ function App() {
         'eth_requestAccounts',
         []
       )) as string[]
+
       const userAddress = accounts[0]
       setAddress(userAddress)
+
       const bal = await provider.getBalance(userAddress)
       setBalance(ethers.formatEther(bal))
+
       await fetchTransactions(userAddress)
     } catch (err) {
       const message =
