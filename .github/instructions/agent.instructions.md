@@ -20,6 +20,17 @@ The agent should use the following technology stack as specified in the project 
 - **Database**: MongoDB + Redis (for caching)
 - **Docker**: For containerization
 
+## Code Style
+
+- Use ESModule syntax (`import`/`export`) rather than CommonJS
+  (`require`/`module.exports`)
+- Use functional components with hooks for React code
+- Avoid using React.FunctionComponent or React.FC to type components, instead,
+  just type the props
+- Use named exports rather than default exports where possible
+- Format code according to the project's ESLint and Prettier configuration
+- Follow the project's existing indentation and formatting style
+
 ## Documentation
 The agent should ensure each tier is documented in the `README.md` file located at the root of the repository. The documentation should include:
 - An overview of your project.
