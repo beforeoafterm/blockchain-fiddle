@@ -20,3 +20,11 @@ The agent should use the following technology stack as specified in the project 
 - **Database**: MongoDB + Redis (for caching)
 - **Docker**: For containerization
 
+## Documentation
+The agent should ensure each tier is documented in the `README.md` file located at the root of the repository. The documentation should include:
+- An overview of your project.
+- Instructions on how to set up and run the application locally.
+- Prerequisites or dependencies.
+- Docker Compose instructions (if applicable).
+- Assumptions or decisions you made.
+- Known issues or limitations.
