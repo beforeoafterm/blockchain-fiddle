@@ -5,7 +5,7 @@ interface WalletDetailsProps {
 }
 
 const WalletDetails = ({ address, balance, network }: WalletDetailsProps) => (
-  <>
+  <section aria-label="Wallet Details">
     <div className="mb-4">
       <h2 className="text-gray-700 dark:text-gray-300 text-sm mb-2">
         Network:
@@ -28,7 +28,7 @@ const WalletDetails = ({ address, balance, network }: WalletDetailsProps) => (
         {balance} ETH
       </p>
     </div>
-  </>
+  </section>
 )
 
 export default WalletDetails

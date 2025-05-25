@@ -6,7 +6,10 @@ interface TransactionCardProps {
 }
 
 const TransactionCard = ({ tx }: TransactionCardProps) => (
-  <li className="border rounded p-2 text-xs bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+  <li
+    className="border rounded p-2 text-xs bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+    aria-label={`Transaction ${tx.hash}`}
+  >
     <div>
       <span className="font-semibold text-gray-700 dark:text-gray-300">
         Hash:
@@ -17,6 +20,7 @@ const TransactionCard = ({ tx }: TransactionCardProps) => (
         rel="noopener noreferrer"
         className="text-blue-600 dark:text-blue-400 underline"
         title="View on Etherscan"
+        aria-label={`View transaction ${tx.hash} on Etherscan`}
       >
         {tx.hash.slice(0, 18)}...
       </a>
