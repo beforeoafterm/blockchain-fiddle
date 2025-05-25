@@ -1,7 +1,7 @@
 # Blockchain Fiddle
 
 ## Overview
-This repository covers frontend, backend, smart contract, and integration for Web3 Fullstack Development. Each section is organized in its own directory for clarity and modularity.
+This monorepo contains a frontend, backend, and smart contract integration to practice Web3 Fullstack Development. Each project is organized in its own directory for clarity and modularity.
 
 ## Directory Structure
 - `frontend/` — React + TypeScript + Vite + TailwindCSS Ethereum wallet dashboard
@@ -9,32 +9,29 @@ This repository covers frontend, backend, smart contract, and integration for We
 - `contracts/` — Solidity smart contracts
 - `docker/` — Docker and Docker Compose files
 
-## Tier 1: Frontend (Ethereum Wallet Dashboard)
-See [`frontend/README.md`](./frontend/README.md) for full details, setup, and usage instructions.
-
-## How to Run (Frontend)
-1. Go to the `frontend` directory:
+## How to Run
+1. Ensure you have the required dependencies installed in all project directories:
    ```sh
-   cd frontend
-   npm install
-   npm run dev
+   npm run setup
    ```
-2. Open [http://localhost:5173](http://localhost:5173) in your browser.
+2. Start the Backend dev server by running the `dev:backend` NPM script:
+   ```sh
+   npm run dev:backend
+   ```
+2. Start the Frontend dev server by running the `dev:frontend` NPM script:
+   ```sh
+   npm run dev:frontend
+   ```
+3. Open [http://localhost:5173](http://localhost:5173) in your browser to view the frontend.
 
 ## Prerequisites
 - Node.js (v20+ recommended)
 - npm (v9+ recommended)
-- MetaMask browser extension
-- Etherscan API key (see `.env` in `frontend/`)
 
 ## Assumptions & Decisions
-- Each tier is implemented in its own directory for clarity.
+- Each project is implemented in its own directory for clarity.
 - Sensitive information (API keys, private keys) is excluded from the repository.
-- See each tier's README for specific details and limitations.
-
-## Known Issues & Limitations
-- Tier 1 only supports MetaMask and Ethereum mainnet.
-- Etherscan API rate limits may apply.
+- See each project's README for specific details and limitations.
 
 ---
 
