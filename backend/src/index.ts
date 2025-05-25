@@ -12,15 +12,29 @@ app.use(express.json())
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000
 const ETHEREUM_RPC_URL = process.env.ETHEREUM_RPC_URL ?? ''
+const REDIS_URL = process.env.REDIS_URL
+const MONGODB_URI = process.env.MONGODB_URI
 
-// Validate that ETHEREUM_RPC_URL is set
+// Validate required environment variables
 if (!ETHEREUM_RPC_URL) {
   console.error('Error: ETHEREUM_RPC_URL is not set in environment variables.')
   process.exit(1)
 }
+if (!REDIS_URL) {
+  console.error('Error: REDIS_URL is not set in environment variables.')
+  process.exit(1)
+}
+if (!MONGODB_URI) {
+  console.error('Error: MONGODB_URI is not set in environment variables.')
+  process.exit(1)
+}
 
-// Create EthereumAccountService instance
-const accountService = new EthereumAccountService(ETHEREUM_RPC_URL)
+// Create EthereumAccountService instance with validated env vars
+const accountService = new EthereumAccountService(
+  ETHEREUM_RPC_URL,
+  REDIS_URL,
+  MONGODB_URI
+)
 
 // Use function syntax to avoid Express type inference issues
 app.get('/api/account/:address', function (req, res) {
