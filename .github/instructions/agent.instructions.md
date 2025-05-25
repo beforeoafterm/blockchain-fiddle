@@ -14,7 +14,7 @@ The agent should maintain a clear and organized codebase structure. The followin
 
 ## Technology stack
 The agent should use the following technology stack as specified in the project instructions:
-- **Frontend**: React.js with TypeScript + Vite + SWC + TailwindCSS
+- **Frontend**: React.js with TypeScript + Vite + SWC + Tailwind V4
 - **Backend**: Node.js + Express.js with TypeScript
 - **Smart Contract**: Solidity
 - **Database**: MongoDB + Redis (for caching)
