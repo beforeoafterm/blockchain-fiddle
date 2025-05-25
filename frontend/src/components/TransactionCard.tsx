@@ -16,6 +16,7 @@ const TransactionCard = ({ tx }: TransactionCardProps) => (
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-600 dark:text-blue-400 underline"
+        title="View on Etherscan"
       >
         {tx.hash.slice(0, 18)}...
       </a>
