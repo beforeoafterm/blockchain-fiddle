@@ -34,37 +34,42 @@ export class EthereumAccountService {
     return this.mongoConnecting
   }
 
+  // Helper to get blockNumber and gasPrice (from cache or provider)
+  private async getBlockAndGas(): Promise<{
+    blockNumber: number
+    gasPrice: string | null
+  }> {
+    const [cachedBlock, cachedGas] = await this.redis.mget(
+      'blockNumber',
+      'gasPrice'
+    )
+
+    if (cachedBlock && cachedGas) {
+      return { blockNumber: Number(cachedBlock), gasPrice: cachedGas }
+    }
+
+    const blockNumber = await this.provider.getBlockNumber()
+    const feeData = await this.provider.getFeeData()
+    const gasPrice = feeData.gasPrice ? feeData.gasPrice.toString() : null
+
+    await this.redis.mset(
+      'blockNumber',
+      blockNumber.toString(),
+      'gasPrice',
+      gasPrice ?? ''
+    )
+    await this.redis.expire('blockNumber', 10)
+    await this.redis.expire('gasPrice', 10)
+
+    return { blockNumber, gasPrice }
+  }
+
   async getAccountInfo(address: string) {
     if (!ethers.isAddress(address)) {
       throw new Error('Invalid Ethereum address.')
     }
 
-    // Try Redis cache for blockNumber and gasPrice
-    const [cachedBlock, cachedGas] = await this.redis.mget(
-      'blockNumber',
-      'gasPrice'
-    )
-    let blockNumber: number
-    let gasPrice: string | null
-
-    if (cachedBlock && cachedGas) {
-      blockNumber = Number(cachedBlock)
-      gasPrice = cachedGas
-    } else {
-      // Fetch from provider and cache
-      blockNumber = await this.provider.getBlockNumber()
-      const feeData = await this.provider.getFeeData()
-      gasPrice = feeData.gasPrice ? feeData.gasPrice.toString() : null
-      // Cache for 10 seconds
-      await this.redis.mset(
-        'blockNumber',
-        blockNumber.toString(),
-        'gasPrice',
-        gasPrice ?? ''
-      )
-      await this.redis.expire('blockNumber', 10)
-      await this.redis.expire('gasPrice', 10)
-    }
+    const { blockNumber, gasPrice } = await this.getBlockAndGas()
 
     // Fetch balance
     const balanceBN = await this.provider.getBalance(address)
