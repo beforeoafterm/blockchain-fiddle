@@ -12,6 +12,8 @@ function App() {
     error,
     connectWallet,
     network,
+    tokenBalance,
+    nfts,
   } = useWallet()
 
   return (
@@ -42,6 +44,8 @@ function App() {
               address={address}
               balance={balance}
               network={network}
+              tokenBalance={tokenBalance}
+              nfts={nfts}
             />
             <TransactionList transactions={transactions} isLoading={loading} />
           </>
