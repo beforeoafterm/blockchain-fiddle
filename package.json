@@ -12,6 +12,7 @@
   },
   "author": "N Petterson",
   "scripts": {
+    "setup": "cd backend && npm i && cd ../frontend && npm i && cd ..",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev"
   }
