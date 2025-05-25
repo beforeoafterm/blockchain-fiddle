@@ -11,6 +11,53 @@ export function useWallet() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
 
+  const [tokenBalance, setTokenBalance] = useState<string>('0')
+  const [nfts, setNfts] = useState<string[]>([])
+
+  // Fetch ERC-20 token balance from backend
+  const fetchTokenBalance = useCallback(async (userAddress: string) => {
+    try {
+      const res = await fetch(`/api/token-balance/${userAddress}`)
+      if (!res.ok) throw new Error('Failed to fetch token balance')
+      const data = await res.json()
+      setTokenBalance(data.balance)
+    } catch {
+      setTokenBalance('0')
+    }
+  }, [])
+
+  // Fetch owned NFTs from backend
+  const fetchNFTs = useCallback(async (userAddress: string) => {
+    try {
+      const res = await fetch(`/api/nfts/${userAddress}`)
+      if (!res.ok) throw new Error('Failed to fetch NFTs')
+      const data = await res.json()
+      setNfts(data.nfts)
+    } catch {
+      setNfts([])
+    }
+  }, [])
+
+  const fetchTransactions = useCallback(
+    async (userAddress: string): Promise<void> => {
+      try {
+        const url = `${ETHERSCAN_API}?module=account&action=txlist&address=${userAddress}&sort=desc&apikey=${ETHERSCAN_API_KEY}`
+        const res = await fetch(url)
+        const data = await res.json()
+        if (data.status !== '1') {
+          setTransactions([])
+          return
+        }
+        setTransactions(data.result.slice(0, 10))
+      } catch (err) {
+        // Log error for debugging, show user-friendly message
+        console.error('Failed to fetch transactions:', err)
+        setError('Failed to fetch transactions.')
+      }
+    },
+    []
+  )
+
   const connectWallet = useCallback(async () => {
     setError('')
     if (!window.ethereum) {
@@ -29,6 +76,8 @@ export function useWallet() {
       setNetwork(net.name)
 
       await fetchTransactions(userAddress)
+      await fetchTokenBalance(userAddress)
+      await fetchNFTs(userAddress)
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to connect wallet.'
@@ -36,24 +85,7 @@ export function useWallet() {
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  const fetchTransactions = async (userAddress: string): Promise<void> => {
-    try {
-      const url = `${ETHERSCAN_API}?module=account&action=txlist&address=${userAddress}&sort=desc&apikey=${ETHERSCAN_API_KEY}`
-      const res = await fetch(url)
-      const data = await res.json()
-      if (data.status !== '1') {
-        setTransactions([])
-        return
-      }
-      setTransactions(data.result.slice(0, 10))
-    } catch (err) {
-      // Log error for debugging, show user-friendly message
-      console.error('Failed to fetch transactions:', err)
-      setError('Failed to fetch transactions.')
-    }
-  }
+  }, [fetchTokenBalance, fetchNFTs, fetchTransactions])
 
   return {
     address,
@@ -63,5 +95,7 @@ export function useWallet() {
     loading,
     error,
     connectWallet,
+    tokenBalance,
+    nfts,
   }
 }
