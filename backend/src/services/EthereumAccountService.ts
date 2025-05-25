@@ -5,14 +5,18 @@ import { AccountBalance } from '../models/AccountBalance.js'
 
 export class EthereumAccountService {
   private readonly provider: ethers.JsonRpcProvider
-  private readonly redis: any
+  private readonly redis: Redis
   private mongoConnected = false
   private mongoConnecting: Promise<void> | null = null
   private readonly mongoUri: string
 
-  constructor(rpcUrl: string, redisUrl: string, mongoUri: string) {
-    this.provider = new ethers.JsonRpcProvider(rpcUrl)
-    this.redis = new Redis(redisUrl)
+  constructor(
+    provider: ethers.JsonRpcProvider,
+    redis: Redis,
+    mongoUri: string
+  ) {
+    this.provider = provider
+    this.redis = redis
     this.mongoUri = mongoUri
   }
 
