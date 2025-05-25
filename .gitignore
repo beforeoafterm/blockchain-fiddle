@@ -18,3 +18,11 @@ lerna-debug.log*
 !**/.vscode/extensions.json
 .idea
 **/.DS_Store
+
+# Ignore Hardhat build artifacts
+artifacts/
+cache/
+typechain/
+coverage/
+coverage.json
+typechain-types/
