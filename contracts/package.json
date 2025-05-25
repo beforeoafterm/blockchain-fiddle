@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "clean": "npx hardhat clean",
+    "compile": "npx hardhat compile",
+    "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.ts --network sepolia",
+    "dev": "concurrently \"npm run node\" \"sleep 3 && npm run deploy:localhost\"",
+    "node": "npx hardhat node",
+    "postcompile": "cp -r ./artifacts/contracts ./../frontend/src/abi && cp -r ./typechain-types ./../frontend/src/types",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
