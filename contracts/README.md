@@ -74,7 +74,6 @@ This directory contains the Ethereum smart contracts and deployment scripts for 
 - `contracts/` — Solidity smart contracts.
 - `scripts/` — Deployment scripts.
 - `test/` — Contract tests.
-- `artifacts/`, `cache/` — Build artifacts (gitignored).
 - `.env.example` — Example environment config for testnet deployment.
 
 ## Assumptions & Decisions
