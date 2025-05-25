@@ -3,7 +3,6 @@ import { useWallet } from './hooks/useWallet'
 import TransactionList from './components/TransactionList'
 import ConnectWalletButton from './components/ConnectWalletButton'
 import WalletDetails from './components/WalletDetails'
-import './App.css'
 
 function App() {
   const { address, balance, transactions, loading, error, connectWallet } =
