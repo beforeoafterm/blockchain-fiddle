@@ -26,3 +26,7 @@ typechain/
 coverage/
 coverage.json
 typechain-types/
+
+
+frontend/src/abi/
+frontend/src/types/
