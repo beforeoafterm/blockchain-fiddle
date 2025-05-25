@@ -1,0 +1,18 @@
+{
+  "name": "blockchain_fiddle",
+  "version": "1.0.0",
+  "description": "Fiddling with Blockchain as a Fullstack Web3 Engineer",
+  "homepage": "https://github.com/beforeoafterm/blockchain-fiddle#readme",
+  "bugs": {
+    "url": "https://github.com/beforeoafterm/blockchain-fiddle/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beforeoafterm/blockchain-fiddle.git"
+  },
+  "author": "N Petterson",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev"
+  }
+}
