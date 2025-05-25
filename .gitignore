@@ -27,6 +27,8 @@ coverage/
 coverage.json
 typechain-types/
 
-
+# Ignore postcompile script-specific directories
 frontend/src/abi/
 frontend/src/types/
+backend/src/abi/
+backend/src/types/
