@@ -26,27 +26,6 @@ function App() {
         <h1 className="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-gray-100">
           Ethereum Wallet Dashboard
         </h1>
-        {!address ? (
-          <ConnectWalletButton onClick={connectWallet} loading={loading} />
-        ) : (
-          <WalletDetails
-            address={address}
-            balance={balance}
-            network={network}
-          />
-        )}
-        {loading && (
-          <div
-            className="flex justify-center my-4"
-            aria-live="polite"
-            aria-busy="true"
-          >
-            <div
-              className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 dark:border-blue-400"
-              aria-label="Loading"
-            ></div>
-          </div>
-        )}
         {error && (
           <p
             className="text-red-600 dark:text-red-400 mb-4 text-center"
@@ -55,16 +34,17 @@ function App() {
             {error}
           </p>
         )}
-        {address && !loading && transactions.length === 0 && !error && (
-          <div
-            className="text-gray-500 dark:text-gray-400 text-center mt-4"
-            aria-live="polite"
-          >
-            No transactions found.
-          </div>
-        )}
-        {address && transactions.length > 0 && !loading && (
-          <TransactionList transactions={transactions} />
+        {!address ? (
+          <ConnectWalletButton onClick={connectWallet} loading={loading} />
+        ) : (
+          <>
+            <WalletDetails
+              address={address}
+              balance={balance}
+              network={network}
+            />
+            <TransactionList transactions={transactions} isLoading={loading} />
+          </>
         )}
       </section>
       <footer
