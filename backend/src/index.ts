@@ -1,14 +1,10 @@
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import { ethers } from 'ethers'
 import { Redis } from 'ioredis'
 import { EthereumAccountService } from './services/EthereumAccountService.js'
 import { asyncHandler } from './utils/asyncHandler.js'
 import { env } from './utils/env.js'
-
-// Load environment variables
-dotenv.config()
 
 const app = express()
 app.use(cors())
