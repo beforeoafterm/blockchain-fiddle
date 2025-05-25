@@ -2,6 +2,11 @@ import { ethers } from 'ethers'
 import { Redis } from 'ioredis'
 import mongoose from 'mongoose'
 import { AccountBalance } from '../models/AccountBalance.js'
+import {
+  NEU_TOKEN_ADDRESS,
+  NEU_NFT_ADDRESS,
+} from '../constants/contractAddresses.js'
+import { NEU_TOKEN_ABI, NEU_NFT_ABI } from '../constants/contractAbis.js'
 
 export class EthereumAccountService {
   private readonly provider: ethers.JsonRpcProvider
@@ -91,5 +96,45 @@ export class EthereumAccountService {
       blockNumber,
       gasPrice,
     }
+  }
+
+  /**
+   * Get ERC-20 token balance for a given address
+   */
+  async getTokenBalance(address: string): Promise<string> {
+    if (!ethers.isAddress(address)) {
+      throw new Error('Invalid Ethereum address.')
+    }
+    if (!NEU_TOKEN_ADDRESS) throw new Error('NEU_TOKEN_ADDRESS not set')
+    const contract = new ethers.Contract(
+      NEU_TOKEN_ADDRESS,
+      NEU_TOKEN_ABI,
+      this.provider
+    )
+    const balance = await contract.balanceOf(address)
+    return balance.toString()
+  }
+
+  /**
+   * Get owned ERC-721 NFT token IDs for a given address
+   */
+  async getOwnedNFTs(address: string): Promise<string[]> {
+    if (!ethers.isAddress(address)) {
+      throw new Error('Invalid Ethereum address.')
+    }
+    if (!NEU_NFT_ADDRESS) throw new Error('NEU_NFT_ADDRESS not set')
+    const contract = new ethers.Contract(
+      NEU_NFT_ADDRESS,
+      NEU_NFT_ABI,
+      this.provider
+    )
+    // ERC-721 standard: use balanceOf and tokenOfOwnerByIndex (if enumerable)
+    const balance = await contract.balanceOf(address)
+    const nfts: string[] = []
+    for (let i = 0; i < balance; i++) {
+      const tokenId = await contract.tokenOfOwnerByIndex(address, i)
+      nfts.push(tokenId.toString())
+    }
+    return nfts
   }
 }

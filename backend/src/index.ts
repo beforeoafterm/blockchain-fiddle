@@ -30,6 +30,26 @@ app.get(
   })
 )
 
+// Fetch ERC-20 token balance for a given address
+app.get(
+  '/api/token-balance/:address',
+  asyncHandler(async (req, res) => {
+    const { address } = req.params
+    const balance = await accountService.getTokenBalance(address)
+    res.json({ address, balance })
+  })
+)
+
+// Fetch owned ERC-721 NFTs for a given address
+app.get(
+  '/api/nfts/:address',
+  asyncHandler(async (req, res) => {
+    const { address } = req.params
+    const nfts = await accountService.getOwnedNFTs(address)
+    res.json({ address, nfts })
+  })
+)
+
 // Centralized error handler
 app.use(
   (
