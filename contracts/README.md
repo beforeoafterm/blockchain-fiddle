@@ -60,10 +60,14 @@ This directory contains the Ethereum smart contracts and deployment scripts for 
 
 ## Scripts
 
-- `node` — Start local Hardhat node.
-- `deploy:localhost` — Deploy contracts to local node.
-- `deploy:sepolia` — Deploy contracts to Sepolia testnet.
-- `dev` — Start node and deploy contracts locally (requires `concurrently`).
+- `clean` — Remove Hardhat build artifacts and cache.
+- `compile` — Compile all Solidity smart contracts.
+- `deploy:localhost` — Deploy contracts to the local Hardhat node.
+- `deploy:sepolia` — Deploy contracts to the Sepolia Ethereum testnet (requires .env with RPC URL and private key).
+- `dev` — Start the local node and deploy contracts to it (for rapid local development; requires `concurrently`).
+- `node` — Start a local Hardhat Ethereum node for development/testing.
+- `postcompile` — Copy contract ABIs and TypeChain types to the frontend after compiling.
+- `test` — Run all smart contract tests using Hardhat.
 
 ## Directory Structure
 
