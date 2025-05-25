@@ -1,34 +1,33 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { ethers } from 'ethers'
 import type { Transaction } from '../../types/ethereum'
-import { ETHERSCAN_API, ETHERSCAN_API_KEY } from '../constants/etherscan'
+import { ETHERSCAN_API_KEY, ETHERSCAN_API } from '../constants/etherscan'
 
 export function useWallet() {
   const [address, setAddress] = useState<string>('')
-  const [balance, setBalance] = useState<string>('')
+  const [balance, setBalance] = useState<string>('0.0')
+  const [network, setNetwork] = useState<string>('')
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
 
-  const connectWallet = async (): Promise<void> => {
+  const connectWallet = useCallback(async () => {
     setError('')
     if (!window.ethereum) {
       setError('MetaMask is not installed.')
       return
     }
+    setLoading(true)
     try {
-      setLoading(true)
-      const provider = new ethers.BrowserProvider(
-        window.ethereum as unknown as ethers.Eip1193Provider
-      )
-      const accounts = (await provider.send(
-        'eth_requestAccounts',
-        []
-      )) as string[]
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const accounts = await provider.send('eth_requestAccounts', [])
       const userAddress = accounts[0]
       setAddress(userAddress)
       const bal = await provider.getBalance(userAddress)
       setBalance(ethers.formatEther(bal))
+      const net = await provider.getNetwork()
+      setNetwork(net.name)
+
       await fetchTransactions(userAddress)
     } catch (err) {
       const message =
@@ -37,7 +36,7 @@ export function useWallet() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const fetchTransactions = async (userAddress: string): Promise<void> => {
     try {
@@ -59,6 +58,7 @@ export function useWallet() {
   return {
     address,
     balance,
+    network,
     transactions,
     loading,
     error,

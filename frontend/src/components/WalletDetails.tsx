@@ -1,10 +1,19 @@
 interface WalletDetailsProps {
   address: string
   balance: string
+  network: string
 }
 
-const WalletDetails = ({ address, balance }: WalletDetailsProps) => (
+const WalletDetails = ({ address, balance, network }: WalletDetailsProps) => (
   <>
+    <div className="mb-4">
+      <h2 className="text-gray-700 dark:text-gray-300 text-sm mb-2">
+        Network:
+      </h2>
+      <p className="font-mono break-all text-blue-700 dark:text-blue-400">
+        {network}
+      </p>
+    </div>
     <div className="mb-4">
       <h2 className="text-gray-700 dark:text-gray-300 text-sm mb-2">
         Connected Address:

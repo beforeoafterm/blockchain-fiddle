@@ -5,8 +5,15 @@ import ConnectWalletButton from './components/ConnectWalletButton'
 import WalletDetails from './components/WalletDetails'
 
 function App() {
-  const { address, balance, transactions, loading, error, connectWallet } =
-    useWallet()
+  const {
+    address,
+    balance,
+    transactions,
+    loading,
+    error,
+    connectWallet,
+    network,
+  } = useWallet()
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 p-4 transition-colors">
@@ -17,7 +24,11 @@ function App() {
         {!address ? (
           <ConnectWalletButton onClick={connectWallet} loading={loading} />
         ) : (
-          <WalletDetails address={address} balance={balance} />
+          <WalletDetails
+            address={address}
+            balance={balance}
+            network={network}
+          />
         )}
         {loading && (
           <div className="flex justify-center my-4">
