@@ -7,6 +7,10 @@ This backend provides a REST API to fetch Ethereum account details, including cu
 - Uses [ethers.js](https://docs.ethers.org/) for blockchain interactions.
 - **Redis caching** for gas price and block number.
 - **MongoDB persistence** for account balances.
+- **Async route handler middleware** for clean error handling.
+- **Centralized error handler** for consistent error responses.
+- **Environment variable validation** using [Zod](https://github.com/colinhacks/zod).
+- **Dependency injection** for service instantiation (testable, flexible code).
 - TypeScript, Express.js, and CORS enabled.
 - Extensible structure for future enhancements.
 
@@ -55,6 +59,13 @@ This backend provides a REST API to fetch Ethereum account details, including cu
 - **Redis** is used to cache the latest block number and gas price for 10 seconds to reduce RPC calls.
 - **MongoDB** is used to persist the latest ETH balance for each queried address.
 - Configure `REDIS_URL` and `MONGODB_URI` in your `.env` file as needed.
+
+## Architecture & Code Quality Improvements
+- **Async route handler middleware** (`utils/asyncHandler.ts`) is used for all async routes, eliminating repetitive try/catch blocks.
+- **Centralized error handler** ensures all errors are logged and returned in a consistent JSON format.
+- **Environment variable validation** is performed at startup using [Zod](https://github.com/colinhacks/zod) (`utils/env.ts`), so the app fails fast if required config is missing or invalid.
+- **Dependency injection**: The Ethereum provider, Redis client, and MongoDB URI are injected into the service, making the code more testable and modular.
+- **TypeScript best practices**: All code is strictly typed, and error boundaries are enforced.
 
 ## Extending
 - Add more endpoints or logic in `src/` as needed.
