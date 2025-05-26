@@ -4,91 +4,57 @@ This directory contains the Ethereum smart contracts and deployment scripts for 
 
 ## Features
 
-- **ERC-20 Token (`NeuToken`)**: Mintable and transferable fungible token.
-- **ERC-721 NFT (`NeuNFT`)**: Mintable and transferable non-fungible token.
-- **OpenZeppelin**: Secure, audited base contracts.
-- **TypeScript**: For scripts and tests.
-- **Local and Sepolia testnet deployment**: Easily deploy contracts to local Hardhat node or Sepolia.
-- **Automated scripts**: For node startup, deployment, and combined dev workflow.
+- **ERC-20 Token (`NeuToken`)**: Mintable and transferable fungible token
+- **ERC-721 NFT (`NeuNFT`)**: Mintable and transferable non-fungible token
+- **OpenZeppelin**: Secure, audited base contracts
+- **TypeScript**: For scripts and tests
+- **Local and Sepolia testnet deployment**: Easily deploy contracts to local Hardhat node or Sepolia
+- **Automated scripts**: For node startup, deployment, and combined dev workflow
+- **Type generation**: Automatic TypeScript types for contracts
+- **Shared types**: Contract types are shared with frontend and backend
 
 ## Setup
-
-### Prerequisites
-
-- Node.js (v20+ recommended)
-- npm (v9+ recommended)
-
-### Installation
 
 1. Install dependencies:
    ```sh
    npm install
    ```
-
-2. (Optional) For Sepolia/testnet deployment, copy the example environment file and set your RPC URL and private key:
+2. Create a `.env` file with required environment variables
+3. Compile contracts and generate types:
    ```sh
-   cp .env.example .env
-   # Edit .env and set PRIVATE_KEY and RPC_URL for Sepolia
+   npm run compile
    ```
 
-## Usage
+### Prerequisites
 
-### Local Development
+- Node.js (v20+ recommended)
+- npm (v9+ recommended)
+- An Ethereum wallet with test ETH (for deployments)
 
-- **Start local Hardhat node:**
-  ```sh
-  npm run node
-  ```
+## Environment Variables
 
-- **Deploy contracts to local node:**
-  ```sh
-  npm run deploy:localhost
-  ```
-
-- **Combined dev (start node and deploy):**
-  ```sh
-  npm run dev
-  ```
-
-### Sepolia Testnet Deployment
-
-1. Ensure `.env` is configured with your Sepolia RPC URL and funded private key.
-2. Deploy:
-   ```sh
-   npm run deploy:sepolia
-   ```
+```env
+# Required for Sepolia testnet deployment
+PRIVATE_KEY=your_deployer_wallet_private_key
+INFURA_API_KEY=your_infura_api_key
+```
 
 ## Scripts
 
-- `clean` — Remove Hardhat build artifacts and cache.
-- `compile` — Compile all Solidity smart contracts.
-- `deploy:localhost` — Deploy contracts to the local Hardhat node.
-- `deploy:sepolia` — Deploy contracts to the Sepolia Ethereum testnet (requires .env with RPC URL and private key).
-- `dev` — Start the local node and deploy contracts to it (for rapid local development; requires `concurrently`).
-- `node` — Start a local Hardhat Ethereum node for development/testing.
-- `postcompile` — Copy contract ABIs and TypeChain types to the frontend after compiling.
-- `test` — Run all smart contract tests using Hardhat.
+- `npm run compile` - Compile contracts and generate TypeScript types
+- `npm run test` - Run the test suite
+- `npm run deploy:local` - Deploy to local Hardhat network
+- `npm run deploy:sepolia` - Deploy to Sepolia testnet
 
-## Directory Structure
+## Type Generation
 
-- `contracts/` — Solidity smart contracts.
-- `scripts/` — Deployment scripts.
-- `test/` — Contract tests.
-- `.env.example` — Example environment config for testnet deployment.
+The project automatically generates TypeScript types for the contracts during compilation. These types are used by both the frontend and backend to ensure type safety when interacting with the contracts.
 
-## Assumptions & Decisions
+## Testing
 
-- OpenZeppelin is used for security and standards compliance.
-- Minting is open to all users for demonstration purposes.
-- Sepolia is the recommended testnet for public deployments.
+The test suite uses:
 
-## Known Issues or Limitations
-
-- Contracts are not audited for production use.
-- Only basic minting and transfer functionality is implemented.
-- No access control or payment logic is included in mint functions.
-
-## References
-
-- [Hardhat Documentation](https://hardhat.org/getting-started/)
-- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/4.x/)
+- Hardhat's testing framework
+- Chai for assertions
+- TypeScript for type safety
+- Ethers.js for contract interactions

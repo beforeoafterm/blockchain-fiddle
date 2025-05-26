@@ -3,12 +3,14 @@
 This project is a simple, accessible Ethereum wallet dashboard built with React, TypeScript, Vite, and TailwindCSS. It allows users to connect their MetaMask wallet, view their ETH balance, and see their last 10 transactions.
 
 ## Features
-- **MetaMask Wallet Connect**: Securely connect your Ethereum wallet using MetaMask.
-- **ETH Balance**: Instantly view your current ETH balance.
-- **Transaction History**: See your last 10 Ethereum transactions, with Etherscan links.
-- **Responsive & Accessible UI**: Built with semantic HTML, ARIA attributes, and full dark mode support.
-- **Performance Optimized**: Transaction lists are memoized for fast rendering.
-- **TypeScript**: All code is fully typed for safety and maintainability.
+- **MetaMask Wallet Integration**: Securely connect your Ethereum wallet using MetaMask
+- **ETH Balance**: Instantly view your current ETH balance
+- **Transaction History**: See your last 10 Ethereum transactions, with Etherscan links
+- **Mint ERC20 and ERC721 Tokens**: Mint your own ERC20 and ERC721 tokens directly from the dashboard
+- **Dark Mode Support**: Toggle your system preferences between light and dark themes for better user experience
+- **Responsive & Accessible UI**: Built with semantic HTML, ARIA attributes, and full dark mode support
+- **Performance Optimized**: Transaction lists are memoized for fast rendering
+- **TypeScript**: All code is fully typed for safety and maintainability
 
 ## Tech Stack
 - [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
@@ -17,31 +19,48 @@ This project is a simple, accessible Ethereum wallet dashboard built with React,
 - [ethers.js](https://docs.ethers.org/)
 - [Etherscan API](https://docs.etherscan.io/)
 
-## Getting Started
+## Setup
 
-### Prerequisites
-- Node.js (v20+ recommended)
-- npm (v9+ recommended)
-- MetaMask browser extension
-- Etherscan API key (see `.env` setup)
+### Using Docker (Recommended)
+1. Navigate to the docker directory:
+   ```sh
+   cd ../docker
+   ```
+2. Create a `.env.docker` file in `docker/frontend/` with your environment variables
+3. Run the service:
+   ```sh
+   docker-compose up frontend
+   ```
+4. Access the app at [http://localhost:80](http://localhost:80)
 
-### Setup
-1. **Install dependencies**
+### Local Development
+1. Install dependencies:
    ```sh
    npm install
    ```
-2. **Configure environment**
-   - Copy `.env` and set your Etherscan API key:
-     ```sh
-     cp .env.example .env
-     # Edit .env and set VITE_ETHERSCAN_API_KEY=your_key
-     ```
-   - Or use the provided `.env` file.
-3. **Run the app**
+2. Create a `.env` file with your environment variables
+3. Start the development server:
    ```sh
    npm run dev
    ```
-   The app will be available at [http://localhost:5173](http://localhost:5173).
+4. Open [http://localhost:5173](http://localhost:5173)
+
+## Environment Variables
+```env
+# Required
+VITE_BACKEND_URL=http://localhost:4000
+VITE_ETHERSCAN_API_KEY=your_etherscan_api_key
+
+# Optional
+VITE_NETWORK=mainnet # default, or: goerli, sepolia
+```
+
+## Docker Setup
+The frontend is served using:
+- Nginx for static file serving and routing
+- Multi-stage Docker build for optimal production images
+- Environment variable injection at runtime
+- Proper handling of React Router paths
 
 ## Usage
 - Click **Connect MetaMask** to connect your wallet.
@@ -64,66 +83,3 @@ This project is a simple, accessible Ethereum wallet dashboard built with React,
 - Only supports Ethereum mainnet addresses.
 - Requires MetaMask browser extension.
 - Etherscan API rate limits may apply.
-
-## Project Structure
-- `frontend/` — React app (this project)
-- `backend/`, `contracts/`, `docker/` — See other tiers for full stack features
-
----
-
-For Tier 2+ (backend, smart contract, integration), see the root `README.md` and respective folders.
-
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
