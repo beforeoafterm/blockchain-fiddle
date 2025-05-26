@@ -3,6 +3,8 @@ import { ethers } from 'ethers'
 import type { Transaction } from '../../types/ethereum'
 import { ETHERSCAN_API_KEY, ETHERSCAN_API } from '../constants/etherscan'
 
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+
 export function useWallet() {
   const [address, setAddress] = useState<string>('')
   const [balance, setBalance] = useState<string>('0.0')
@@ -17,10 +19,10 @@ export function useWallet() {
   // Fetch ERC-20 token balance from backend
   const fetchTokenBalance = useCallback(async (userAddress: string) => {
     try {
-      const res = await fetch(`/api/token-balance/${userAddress}`)
+      const res = await fetch(`${API_URL}/api/token-balance/${userAddress}`)
       if (!res.ok) throw new Error('Failed to fetch token balance')
       const data = await res.json()
-      setTokenBalance(data.balance)
+      setTokenBalance(ethers.formatEther(data.balance))
     } catch {
       setTokenBalance('0')
     }
@@ -29,7 +31,7 @@ export function useWallet() {
   // Fetch owned NFTs from backend
   const fetchNFTs = useCallback(async (userAddress: string) => {
     try {
-      const res = await fetch(`/api/nfts/${userAddress}`)
+      const res = await fetch(`${API_URL}/api/nfts/${userAddress}`)
       if (!res.ok) throw new Error('Failed to fetch NFTs')
       const data = await res.json()
       setNfts(data.nfts)
