@@ -16,6 +16,8 @@ function App() {
     network,
     tokenBalance,
     nfts,
+    refreshNFTs,
+    refreshTokenBalance,
   } = useWallet()
 
   return (
@@ -58,6 +60,8 @@ function App() {
                 : null
             }
             address={address}
+            refreshNFTs={refreshNFTs}
+            refreshTokenBalance={refreshTokenBalance}
           />
         </section>
       )}

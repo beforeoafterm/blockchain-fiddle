@@ -9,10 +9,16 @@ import {
 interface MintUIProps {
   provider: ethers.BrowserProvider | null
   address: string
-  onMinted?: () => void
+  refreshTokenBalance: () => Promise<void>
+  refreshNFTs: () => Promise<void>
 }
 
-const MintForm = ({ provider, address, onMinted }: MintUIProps) => {
+const MintForm = ({
+  provider,
+  address,
+  refreshTokenBalance,
+  refreshNFTs,
+}: MintUIProps) => {
   const [minting, setMinting] = useState(false)
   const [mintError, setMintError] = useState('')
   const [mintSuccess, setMintSuccess] = useState('')
@@ -22,48 +28,58 @@ const MintForm = ({ provider, address, onMinted }: MintUIProps) => {
   const handleMint = async () => {
     setMintError('')
     setMintSuccess('')
-    if (!provider || !address) {
+
+    if (!provider) {
       setMintError('Wallet not connected')
       return
     }
+
     setMinting(true)
+    const mint = mintType === 'erc20' ? mintErc20 : mintErc721
+
     try {
-      const signer = await provider.getSigner()
-      if (mintType === 'erc20') {
-        const contract = new ethers.Contract(
-          NEU_TOKEN_ADDRESS,
-          NEU_TOKEN_ABI,
-          signer
-        )
-        const tx = await contract.mint(address, ethers.parseUnits(amount, 18))
-        await tx.wait()
-        setMintSuccess(`Minted ${amount} NeuToken!`)
-      } else {
-        const contract = new ethers.Contract(
-          NEU_NFT_ADDRESS,
-          NEU_NFT_ABI,
-          signer
-        )
-        const tx = await contract.mint(address)
-        await tx.wait()
-        setMintSuccess('Minted a NeuNFT!')
-      }
-      if (onMinted) onMinted()
-    } catch (err) {
-      console.log('Mint error:', err)
-      if (err instanceof Error) {
-        if (err.message.includes('ACTION_REJECTED'))
-          return setMintError('Transaction rejected by user')
-        else if (err.message.includes('UNPREDICTABLE_GAS_LIMIT'))
-          return setMintError('Transaction failed due to gas limit issues')
-        else if (err.message.includes('INSUFFICIENT_FUNDS'))
-          return setMintError('Insufficient funds for transaction')
-        else return setMintError(`Transaction failed: ${err.message}`)
-      }
-      setMintError('Mint failed')
+      await mint(provider)
+    } catch (e) {
+      console.log('Mint error:', e)
+      handleError(e)
     } finally {
       setMinting(false)
     }
+  }
+
+  const mintErc20 = async (provider: ethers.BrowserProvider) => {
+    const signer = await provider.getSigner()
+    const contract = new ethers.Contract(
+      NEU_TOKEN_ADDRESS,
+      NEU_TOKEN_ABI,
+      signer
+    )
+    const tx = await contract.mint(address, ethers.parseUnits(amount, 18))
+    await tx.wait()
+    setMintSuccess(`Minted ${amount} NeuToken!`)
+    await refreshTokenBalance()
+  }
+
+  const mintErc721 = async (provider: ethers.BrowserProvider) => {
+    const signer = await provider.getSigner()
+    const contract = new ethers.Contract(NEU_NFT_ADDRESS, NEU_NFT_ABI, signer)
+    const tx = await contract.mint(address)
+    await tx.wait()
+    setMintSuccess('Minted a NeuNFT!')
+    await refreshNFTs()
+  }
+
+  const handleError = (error: unknown) => {
+    if (error instanceof Error) {
+      if (error.message.includes('ACTION_REJECTED'))
+        return setMintError('Transaction rejected by user')
+      else if (error.message.includes('UNPREDICTABLE_GAS_LIMIT'))
+        return setMintError('Transaction failed due to gas limit issues')
+      else if (error.message.includes('INSUFFICIENT_FUNDS'))
+        return setMintError('Insufficient funds for transaction')
+      else return setMintError(`Transaction failed: ${error.message}`)
+    }
+    setMintError('Mint failed')
   }
 
   const contractName = mintType === 'erc20' ? 'NeuToken' : 'NeuNFT'

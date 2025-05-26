@@ -99,5 +99,7 @@ export function useWallet() {
     connectWallet,
     tokenBalance,
     nfts,
+    refreshTokenBalance: async () => await fetchTokenBalance(address),
+    refreshNFTs: async () => await fetchNFTs(address),
   }
 }
