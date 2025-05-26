@@ -128,13 +128,17 @@ export class EthereumAccountService {
       NEU_NFT_ABI,
       this.provider
     )
-    // ERC-721 standard: use balanceOf and tokenOfOwnerByIndex (if enumerable)
+
+    // Get NFT balance for address
     const balance = await contract.balanceOf(address)
     const nfts: string[] = []
+
+    // Use ERC721Enumerable's tokenOfOwnerByIndex to get all tokens
     for (let i = 0; i < balance; i++) {
       const tokenId = await contract.tokenOfOwnerByIndex(address, i)
       nfts.push(tokenId.toString())
     }
+
     return nfts
   }
 }
