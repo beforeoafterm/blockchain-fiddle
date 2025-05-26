@@ -1,0 +1,63 @@
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  redis-data:
+  mongodb-data:
+
+networks:
+  app-network:
+    driver: bridge
