@@ -10,6 +10,11 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+// Health check endpoint
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'healthy' })
+})
+
 const PORT = Number(env.PORT)
 const ETHEREUM_RPC_URL = env.ETHEREUM_RPC_URL
 const REDIS_URL = env.REDIS_URL
