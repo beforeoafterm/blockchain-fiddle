@@ -3,6 +3,10 @@
 ## Overview
 This monorepo contains a frontend, backend, and smart contract integration to practice Web3 Fullstack Development. Each project is organized in its own directory for clarity and modularity.
 
+## Preview
+
+https://www.loom.com/share/0fd7b814561c495ba18071827a0e8236?sid=469f57c7-892b-4358-9b65-580ab5e94e6f
+
 ## Directory Structure
 - `frontend/` — React + TypeScript + Vite + TailwindCSS Ethereum wallet dashboard
 - `backend/` — Node.js + Express.js API + TypeScript
